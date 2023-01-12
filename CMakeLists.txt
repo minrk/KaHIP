@@ -390,8 +390,18 @@ endif()
 # pybind11 module
 option(BUILDPYTHONMODULE "Build Python binding." OFF)
 if (BUILDPYTHONMODULE)
+  find_package(
+    Python3
+    COMPONENTS Interpreter Development.Module
+    REQUIRED
+  )
   find_package(pybind11 REQUIRED)
   pybind11_add_module(kahip_python_binding ${CMAKE_CURRENT_SOURCE_DIR}/misc/pymodule/kahip.cpp)
   target_link_libraries(kahip_python_binding PUBLIC kahip_static)
   set_target_properties(kahip_python_binding PROPERTIES OUTPUT_NAME "kahip")
+  install(TARGETS kahip_python_binding
+    LIBRARY DESTINATION "${Python3_SITELIB}"
+    COMPONENT python
+    EXCLUDE_FROM_ALL
+  )
 endif ()
